@@ -1,0 +1,106 @@
+<template >
+<div class="box">
+<el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
+<h3 class="title">玩去后台系统登录</h3>
+<el-form-item prop="account">
+<el-input type="text" autofocus="autofocus" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
+</el-form-item>
+<el-form-item prop="checkPass">
+<el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
+</el-form-item>
+<el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
+<el-form-item style="width:100%;">
+<el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit" >登录</el-button>
+<!-- <el-button @click.native.prevent="handleReset2">重置</el-button> -->
+</el-form-item>
+</el-form>
+</div>
+</template>
+
+
+<script>
+export default {
+data() {
+return {
+ruleForm2: {
+account: 'admin',
+checkPass: '123456'
+},
+rules2: {
+account: [
+{ required: true, message: '请输入账号', trigger: 'blur' },
+//{ validator: validaePass }
+],
+checkPass: [
+{ required: true, message: '请输入密码', trigger: 'blur' },
+//{ validator: validaePass2 }
+]
+},
+checked: true
+};
+},
+methods: {
+handleSubmit(){
+//1：获取用户输入的用户名和密码
+var name=this.ruleForm2.account;
+var pwd=this.ruleForm2.checkPass;
+//2：验证
+//发送请求
+var url="http://127.0.0.1:3000/HTlogin?name="+name+"&pwd="+pwd;
+this.axios.get(url).then(result=>{
+if(result.data.code>0){
+this.$router.push("/Home");
+}else{
+// alert(result.data.msg);
+this.$alert(result.data.msg, '确定', {
+            confirmButtonText: '确定'
+          })
+}
+})
+}
+},
+}
+</script>
+<style scoped>
+*{
+margin: 0;
+padding: 0;
+}
+.box{
+width: 100%;
+height: 800px;
+margin-top:50px;
+display:flex;
+justify-content: center;
+align-items: center;
+background-image: url("http://127.0.0.1:3000/images/reg.jpg")
+}
+.login-container {
+-webkit-border-radius: 5px;
+border-radius: 5px;
+-moz-border-radius: 5px;
+background-clip: padding-box;
+width: 350px;
+padding: 35px 35px 15px 35px;
+background: #fff;
+border: 1px solid #eaeaea;
+box-shadow: 0 0 25px #cac6c6;
+}
+.title {
+margin: 0px auto 40px auto;
+text-align: center;
+color: #505458;
+}
+.remember {
+margin: 20px 0px 20px 0px;
+}
+.el-button{
+height: 30px;
+}
+.el-form-item:nth-child(2){
+margin: 0px 0 35px 0;
+}
+.el-form{
+margin-top: -150px;
+}
+</style>
